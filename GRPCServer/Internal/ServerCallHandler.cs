@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Grpc.Core;
 using Microsoft.AspNetCore.Http;
 
-namespace GRPCSample.Internal
+namespace GRPCServer.Internal
 {
     internal interface IServerCallHandler
     {

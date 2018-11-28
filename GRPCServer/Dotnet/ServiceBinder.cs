@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Grpc.Core;
-using GRPCSample.Internal;
+using GRPCServer.Internal;
 
-namespace GRPCSample.Dotnet
+namespace GRPCServer.Dotnet
 {
     public class ServiceBinder : ServiceBinderBase
     {

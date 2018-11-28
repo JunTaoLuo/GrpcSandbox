@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GRPCSample.Dotnet;
+using GRPCServer.Dotnet;
 using Helloworld;
 
 namespace Microsoft.Extensions.DependencyInjection
