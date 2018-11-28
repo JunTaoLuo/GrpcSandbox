@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+import "google/protobuf/Empty.proto";
+package HelloCounter;
+
+// The greeting service definition.
+service Counter {
+  // Sends a greeting
+  rpc GetCount (google.protobuf.Empty) returns (CounterReply) {}
+}
+
+// The response message containing the count
+message CounterReply {
+  int32 message = 1;
+}

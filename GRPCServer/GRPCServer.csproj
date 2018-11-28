@@ -8,12 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProtoBuf Include="..\GRPCProto\*.proto" />
+    <!-- <ProtoBuf Include="..\GRPCProto\*.proto" /> -->
+    <Compile Include="obj\**\*.cs" />
 
     <PackageReference Include="Google.Protobuf" Version="3.6.1" />
     <PackageReference Include="Grpc.Core" Version="1.18.0-dev" />
     <PackageReference Include="Grpc.Tools" Version="1.18.0-dev" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="3.0.0-preview-18572-0018" />
   </ItemGroup>
 
 </Project>

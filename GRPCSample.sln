@@ -7,8 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GRPCClient", "GRPCClient\GR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GRPCServer", "GRPCServer\GRPCServer.csproj", "{3166A410-3896-458D-885C-0DE8CD6158B5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GRPCProto", "GRPCProto", "{5F608F08-3E13-48DD-AD77-C1CC29B29E6A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A1A154A9-F1B4-451D-9247-A2F5E317267C}"
 	ProjectSection(SolutionItems) = preProject
+		GRPCProto\hellocounter.proto = GRPCProto\hellocounter.proto
 		GRPCProto\helloworld.proto = GRPCProto\helloworld.proto
 	EndProjectSection
 EndProject

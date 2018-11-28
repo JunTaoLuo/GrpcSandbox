@@ -1,7 +1,7 @@
 
 using System.Threading.Tasks;
 using Grpc.Core;
-using Helloworld;
+using HelloWorld;
 
 class GreeterImpl : Greeter.GreeterBase
     {

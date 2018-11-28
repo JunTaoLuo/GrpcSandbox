@@ -18,7 +18,6 @@ namespace GRPCServer
                 {
                     options.Listen(IPAddress.Loopback, 50051, listenOptions =>
                     {
-                        // listenOptions.UseHttps();
                         listenOptions.Protocols = HttpProtocols.Http2;
                     });
                 })

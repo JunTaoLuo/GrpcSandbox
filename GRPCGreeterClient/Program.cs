@@ -1,18 +1,17 @@
 ﻿using System;
 using Grpc.Core;
-using Helloworld;
+using HelloWorld;
 
-namespace GRPCClientSample
+namespace GRPCGreeterClient
 {
     class Program
     {
         static void Main(string[] args)
         {
-            // Channel channel = new Channel("127.0.0.1:50051", ChannelCredentials.Insecure);
             Channel channel = new Channel("127.0.0.1:50051", ChannelCredentials.Insecure);
 
             var client = new Greeter.GreeterClient(channel);
-            String user = "you";
+            var user = "GreeterClient";
 
             var reply = client.SayHello(new HelloRequest { Name = user });
             Console.WriteLine("Greeting: " + reply.Message);

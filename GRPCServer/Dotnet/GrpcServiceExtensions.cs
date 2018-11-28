@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Grpc.Core;
 using GRPCServer.Dotnet;
-using Helloworld;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -17,7 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> for adding services.</param>
         /// <returns></returns>
-        public static IServiceCollection AddGrpc<GrpcImpl>(this IServiceCollection services) where GrpcImpl : Greeter.GreeterBase, new()
+        public static IServiceCollection AddGrpc(this IServiceCollection services, Action<ServiceBinderBase> configureServiceBinder)
         {
             if (services == null)
             {
@@ -25,7 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             var serviceBinder = new ServiceBinder();
-            Greeter.BindService(serviceBinder, new GrpcImpl());
+            configureServiceBinder(serviceBinder);
             services.AddSingleton(serviceBinder);
 
             return services;
