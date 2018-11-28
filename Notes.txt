@@ -1,0 +1,12 @@
+1. Need to set <EnableDefaultProtoBufItems> property to auto compile .proto files
+2. Need to include references to Google.Protobuf and Grpc.Core packages
+3. Use pipes instead of streams
+4. Temporary files in obj/
+	TemporaryGeneratedFile_GUID.s
+5. Https
+6. Design time support
+7. Static BindService extensions
+8. Endpoint support
+9. Streaming client/server
+10. Logging
+11. Perf benchmarks
