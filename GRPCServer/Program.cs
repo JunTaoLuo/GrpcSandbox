@@ -1,4 +1,4 @@
-﻿using System.Net;
+﻿using Common;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -16,8 +16,9 @@ namespace GRPCServer
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureKestrel(options =>
                 {
-                    options.Listen(IPAddress.Loopback, 50051, listenOptions =>
+                    options.ListenLocalhost(50051, listenOptions =>
                     {
+                        listenOptions.UseHttps(Utils.ServerPFXPath, "1111");
                         listenOptions.Protocols = HttpProtocols.Http2;
                     });
                 })

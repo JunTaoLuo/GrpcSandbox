@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using Common;
 using Grpc.Core;
 using HelloCounter;
 
@@ -8,8 +10,7 @@ namespace GRPCClientSample
     {
         static void Main(string[] args)
         {
-            Channel channel = new Channel("127.0.0.1:50051", ChannelCredentials.Insecure);
-
+            var channel = new Channel("localhost:50051", Utils.ClientSslCredentials);
             var client = new Counter.CounterClient(channel);
 
             var reply = client.GetCount(new Google.Protobuf.WellKnownTypes.Empty());

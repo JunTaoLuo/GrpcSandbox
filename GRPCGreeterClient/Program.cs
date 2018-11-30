@@ -1,4 +1,5 @@
 ﻿using System;
+using Common;
 using Grpc.Core;
 using HelloWorld;
 
@@ -8,12 +9,10 @@ namespace GRPCGreeterClient
     {
         static void Main(string[] args)
         {
-            Channel channel = new Channel("127.0.0.1:50051", ChannelCredentials.Insecure);
-
+            var channel = new Channel("127.0.0.1:50051", Utils.ClientSslCredentials);
             var client = new Greeter.GreeterClient(channel);
-            var user = "GreeterClient";
 
-            var reply = client.SayHello(new HelloRequest { Name = user });
+            var reply = client.SayHello(new HelloRequest { Name = "GreeterClient" });
             Console.WriteLine("Greeting: " + reply.Message);
 
             channel.ShutdownAsync().Wait();
