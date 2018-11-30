@@ -3,17 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <!-- Uncomment line below to automatically compile .proto files in the project directory -->
     <!-- <EnableDefaultProtoBufItems>true</EnableDefaultProtoBufItems> -->
     <GenerateUserSecretsAttribute>false</GenerateUserSecretsAttribute>
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Uncomment line below to compile specific .proto files -->
     <!-- <ProtoBuf Include="..\GRPCProto\*.proto" /> -->
     <Compile Include="obj\**\*.cs" />
 
     <PackageReference Include="Google.Protobuf" Version="3.6.1" />
-    <PackageReference Include="Grpc.Core" Version="1.18.0-dev" />
-    <PackageReference Include="Grpc.Tools" Version="1.18.0-dev" />
+    <PackageReference Include="Grpc.Core" Version="1.17.0-pre3" />
+    <PackageReference Include="Grpc.Tools" Version="1.17.0-pre3" />
   </ItemGroup>
 
 </Project>
