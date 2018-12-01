@@ -16,6 +16,7 @@ namespace GRPCServer
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureKestrel(options =>
                 {
+                    options.Limits.MinRequestBodyDataRate = null;
                     options.ListenLocalhost(50051, listenOptions =>
                     {
                         listenOptions.UseHttps(Utils.ServerPFXPath, "1111");

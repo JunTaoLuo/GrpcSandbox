@@ -26,8 +26,10 @@ namespace HelloWorld {
           string.Concat(
             "ChBoZWxsb3dvcmxkLnByb3RvEgpIZWxsb1dvcmxkIhwKDEhlbGxvUmVxdWVz",
             "dBIMCgRuYW1lGAEgASgJIh0KCkhlbGxvUmVwbHkSDwoHbWVzc2FnZRgBIAEo",
-            "CTJJCgdHcmVldGVyEj4KCFNheUhlbGxvEhguSGVsbG9Xb3JsZC5IZWxsb1Jl",
-            "cXVlc3QaFi5IZWxsb1dvcmxkLkhlbGxvUmVwbHkiAGIGcHJvdG8z"));
+            "CTKMAQoHR3JlZXRlchI+CghTYXlIZWxsbxIYLkhlbGxvV29ybGQuSGVsbG9S",
+            "ZXF1ZXN0GhYuSGVsbG9Xb3JsZC5IZWxsb1JlcGx5IgASQQoJU2F5SGVsbG9z",
+            "EhguSGVsbG9Xb3JsZC5IZWxsb1JlcXVlc3QaFi5IZWxsb1dvcmxkLkhlbGxv",
+            "UmVwbHkiADABYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {

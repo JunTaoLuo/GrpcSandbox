@@ -25,6 +25,13 @@ namespace HelloWorld {
         __Marshaller_HelloWorld_HelloRequest,
         __Marshaller_HelloWorld_HelloReply);
 
+    static readonly grpc::Method<global::HelloWorld.HelloRequest, global::HelloWorld.HelloReply> __Method_SayHellos = new grpc::Method<global::HelloWorld.HelloRequest, global::HelloWorld.HelloReply>(
+        grpc::MethodType.ServerStreaming,
+        __ServiceName,
+        "SayHellos",
+        __Marshaller_HelloWorld_HelloRequest,
+        __Marshaller_HelloWorld_HelloReply);
+
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
@@ -45,80 +52,11 @@ namespace HelloWorld {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-    }
-
-    /// <summary>Client for Greeter</summary>
-    public partial class GreeterClient : grpc::ClientBase<GreeterClient>
-    {
-      /// <summary>Creates a new client for Greeter</summary>
-      /// <param name="channel">The channel to use to make remote calls.</param>
-      public GreeterClient(grpc::Channel channel) : base(channel)
+      public virtual global::System.Threading.Tasks.Task SayHellos(global::HelloWorld.HelloRequest request, grpc::IServerStreamWriter<global::HelloWorld.HelloReply> responseStream, grpc::ServerCallContext context)
       {
-      }
-      /// <summary>Creates a new client for Greeter that uses a custom <c>CallInvoker</c>.</summary>
-      /// <param name="callInvoker">The callInvoker to use to make remote calls.</param>
-      public GreeterClient(grpc::CallInvoker callInvoker) : base(callInvoker)
-      {
-      }
-      /// <summary>Protected parameterless constructor to allow creation of test doubles.</summary>
-      protected GreeterClient() : base()
-      {
-      }
-      /// <summary>Protected constructor to allow creation of configured clients.</summary>
-      /// <param name="configuration">The client configuration.</param>
-      protected GreeterClient(ClientBaseConfiguration configuration) : base(configuration)
-      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      /// <summary>
-      /// Sends a greeting
-      /// </summary>
-      /// <param name="request">The request to send to the server.</param>
-      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
-      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
-      /// <param name="cancellationToken">An optional token for canceling the call.</param>
-      /// <returns>The response received from the server.</returns>
-      public virtual global::HelloWorld.HelloReply SayHello(global::HelloWorld.HelloRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
-      {
-        return SayHello(request, new grpc::CallOptions(headers, deadline, cancellationToken));
-      }
-      /// <summary>
-      /// Sends a greeting
-      /// </summary>
-      /// <param name="request">The request to send to the server.</param>
-      /// <param name="options">The options for the call.</param>
-      /// <returns>The response received from the server.</returns>
-      public virtual global::HelloWorld.HelloReply SayHello(global::HelloWorld.HelloRequest request, grpc::CallOptions options)
-      {
-        return CallInvoker.BlockingUnaryCall(__Method_SayHello, null, options, request);
-      }
-      /// <summary>
-      /// Sends a greeting
-      /// </summary>
-      /// <param name="request">The request to send to the server.</param>
-      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
-      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
-      /// <param name="cancellationToken">An optional token for canceling the call.</param>
-      /// <returns>The call object.</returns>
-      public virtual grpc::AsyncUnaryCall<global::HelloWorld.HelloReply> SayHelloAsync(global::HelloWorld.HelloRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
-      {
-        return SayHelloAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
-      }
-      /// <summary>
-      /// Sends a greeting
-      /// </summary>
-      /// <param name="request">The request to send to the server.</param>
-      /// <param name="options">The options for the call.</param>
-      /// <returns>The call object.</returns>
-      public virtual grpc::AsyncUnaryCall<global::HelloWorld.HelloReply> SayHelloAsync(global::HelloWorld.HelloRequest request, grpc::CallOptions options)
-      {
-        return CallInvoker.AsyncUnaryCall(__Method_SayHello, null, options, request);
-      }
-      /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
-      protected override GreeterClient NewInstance(ClientBaseConfiguration configuration)
-      {
-        return new GreeterClient(configuration);
-      }
     }
 
     /// <summary>Creates service definition that can be registered with a server</summary>
@@ -126,7 +64,8 @@ namespace HelloWorld {
     public static grpc::ServerServiceDefinition BindService(GreeterBase serviceImpl)
     {
       return grpc::ServerServiceDefinition.CreateBuilder()
-          .AddMethod(__Method_SayHello, serviceImpl.SayHello).Build();
+          .AddMethod(__Method_SayHello, serviceImpl.SayHello)
+          .AddMethod(__Method_SayHellos, serviceImpl.SayHellos).Build();
     }
 
     /// <summary>Register service method implementations with a service binder. Useful when customizing the service binding logic.
@@ -136,7 +75,9 @@ namespace HelloWorld {
     public static void BindService(this grpc::ServiceBinderBase serviceBinder, GreeterBase serviceImpl)
     {
       serviceBinder.AddMethod(__Method_SayHello, serviceImpl.SayHello);
+      serviceBinder.AddMethod(__Method_SayHellos, serviceImpl.SayHellos);
     }
+
   }
 }
 #endregion

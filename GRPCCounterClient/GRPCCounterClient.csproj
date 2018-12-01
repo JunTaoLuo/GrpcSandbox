@@ -1,16 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- Uncomment line below to compile specific .proto files -->
-    <ProtoBuf Include="..\GRPCProto\*.proto" />
+    <ProtoBuf Include="..\GRPCProto\hellocounter.proto" GrpcServices="Client" />
 
-    <Compile Include="$(MSBuildThisFileDirectory)..\shared\*.cs"/>
-
+    <Compile Include="$(MSBuildThisFileDirectory)..\shared\*.cs" />
 
     <PackageReference Include="Google.Protobuf" Version="3.6.1" />
     <PackageReference Include="Grpc.Core" Version="1.17.0-pre3" />

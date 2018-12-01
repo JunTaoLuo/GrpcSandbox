@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using HelloCounter;
 using HelloWorld;
+using HelloChat;
 
 namespace GRPCServer
 {
@@ -16,8 +17,9 @@ namespace GRPCServer
         {
             services.AddGrpc(builder =>
             {
-                builder.BindService(new CounterImpl());
+                builder.BindService(new ChatterImpl());
                 builder.BindService(new GreeterImpl());
+                builder.BindService(new CounterImpl());
             });
         }
 

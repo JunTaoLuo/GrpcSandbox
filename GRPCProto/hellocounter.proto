@@ -3,13 +3,20 @@ syntax = "proto3";
 import "google/protobuf/Empty.proto";
 package HelloCounter;
 
-// The greeting service definition.
+// The counter service definition.
 service Counter {
-  // Sends a greeting
-  rpc GetCount (google.protobuf.Empty) returns (CounterReply) {}
+  // Get current count
+  rpc IncrementCount (google.protobuf.Empty) returns (CounterReply) {}
+  // Increment count through multiple counts
+  rpc AccumulateCount (stream CounterRequest) returns (CounterReply) {}
 }
 
-// The response message containing the count
+// The request message containing the count to increment by
+message CounterRequest {
+  int32 count = 1;
+}
+
+// The response message containing the current count
 message CounterReply {
-  int32 message = 1;
+  int32 count = 1;
 }

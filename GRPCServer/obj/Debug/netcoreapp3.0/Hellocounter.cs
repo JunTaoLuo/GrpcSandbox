@@ -25,14 +25,17 @@ namespace HelloCounter {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChJoZWxsb2NvdW50ZXIucHJvdG8SDEhlbGxvQ291bnRlchobZ29vZ2xlL3By",
-            "b3RvYnVmL0VtcHR5LnByb3RvIh8KDENvdW50ZXJSZXBseRIPCgdtZXNzYWdl",
-            "GAEgASgFMksKB0NvdW50ZXISQAoIR2V0Q291bnQSFi5nb29nbGUucHJvdG9i",
-            "dWYuRW1wdHkaGi5IZWxsb0NvdW50ZXIuQ291bnRlclJlcGx5IgBiBnByb3Rv",
-            "Mw=="));
+            "b3RvYnVmL0VtcHR5LnByb3RvIh8KDkNvdW50ZXJSZXF1ZXN0Eg0KBWNvdW50",
+            "GAEgASgFIh0KDENvdW50ZXJSZXBseRINCgVjb3VudBgBIAEoBTKiAQoHQ291",
+            "bnRlchJGCg5JbmNyZW1lbnRDb3VudBIWLmdvb2dsZS5wcm90b2J1Zi5FbXB0",
+            "eRoaLkhlbGxvQ291bnRlci5Db3VudGVyUmVwbHkiABJPCg9BY2N1bXVsYXRl",
+            "Q291bnQSHC5IZWxsb0NvdW50ZXIuQ291bnRlclJlcXVlc3QaGi5IZWxsb0Nv",
+            "dW50ZXIuQ291bnRlclJlcGx5IgAoAWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.EmptyReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::HelloCounter.CounterReply), global::HelloCounter.CounterReply.Parser, new[]{ "Message" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::HelloCounter.CounterRequest), global::HelloCounter.CounterRequest.Parser, new[]{ "Count" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::HelloCounter.CounterReply), global::HelloCounter.CounterReply.Parser, new[]{ "Count" }, null, null, null)
           }));
     }
     #endregion
@@ -40,7 +43,139 @@ namespace HelloCounter {
   }
   #region Messages
   /// <summary>
-  /// The response message containing the count
+  /// The request message containing the count to increment by
+  /// </summary>
+  public sealed partial class CounterRequest : pb::IMessage<CounterRequest> {
+    private static readonly pb::MessageParser<CounterRequest> _parser = new pb::MessageParser<CounterRequest>(() => new CounterRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<CounterRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::HelloCounter.HellocounterReflection.Descriptor.MessageTypes[0]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CounterRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CounterRequest(CounterRequest other) : this() {
+      count_ = other.count_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CounterRequest Clone() {
+      return new CounterRequest(this);
+    }
+
+    /// <summary>Field number for the "count" field.</summary>
+    public const int CountFieldNumber = 1;
+    private int count_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Count {
+      get { return count_; }
+      set {
+        count_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as CounterRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(CounterRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Count != other.Count) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Count != 0) hash ^= Count.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Count != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(Count);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Count != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Count);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(CounterRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Count != 0) {
+        Count = other.Count;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Count = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
+  /// The response message containing the current count
   /// </summary>
   public sealed partial class CounterReply : pb::IMessage<CounterReply> {
     private static readonly pb::MessageParser<CounterReply> _parser = new pb::MessageParser<CounterReply>(() => new CounterReply());
@@ -50,7 +185,7 @@ namespace HelloCounter {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::HelloCounter.HellocounterReflection.Descriptor.MessageTypes[0]; }
+      get { return global::HelloCounter.HellocounterReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -67,7 +202,7 @@ namespace HelloCounter {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public CounterReply(CounterReply other) : this() {
-      message_ = other.message_;
+      count_ = other.count_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -76,14 +211,14 @@ namespace HelloCounter {
       return new CounterReply(this);
     }
 
-    /// <summary>Field number for the "message" field.</summary>
-    public const int MessageFieldNumber = 1;
-    private int message_;
+    /// <summary>Field number for the "count" field.</summary>
+    public const int CountFieldNumber = 1;
+    private int count_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int Message {
-      get { return message_; }
+    public int Count {
+      get { return count_; }
       set {
-        message_ = value;
+        count_ = value;
       }
     }
 
@@ -100,14 +235,14 @@ namespace HelloCounter {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Message != other.Message) return false;
+      if (Count != other.Count) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (Message != 0) hash ^= Message.GetHashCode();
+      if (Count != 0) hash ^= Count.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -121,9 +256,9 @@ namespace HelloCounter {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (Message != 0) {
+      if (Count != 0) {
         output.WriteRawTag(8);
-        output.WriteInt32(Message);
+        output.WriteInt32(Count);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -133,8 +268,8 @@ namespace HelloCounter {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (Message != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Message);
+      if (Count != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Count);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -147,8 +282,8 @@ namespace HelloCounter {
       if (other == null) {
         return;
       }
-      if (other.Message != 0) {
-        Message = other.Message;
+      if (other.Count != 0) {
+        Count = other.Count;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -162,7 +297,7 @@ namespace HelloCounter {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            Message = input.ReadInt32();
+            Count = input.ReadInt32();
             break;
           }
         }

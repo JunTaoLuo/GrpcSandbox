@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <!-- Uncomment line below to compile specific .proto files -->
-    <ProtoBuf Include="..\GRPCProto\helloworld.proto" GrpcServices="Client" />
+    <ProtoBuf Include="..\GRPCProto\hellochat.proto" GrpcServices="Client" />
 
     <Compile Include="$(MSBuildThisFileDirectory)..\shared\*.cs" />
 
