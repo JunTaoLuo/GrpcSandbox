@@ -5,13 +5,6 @@ VisualStudioVersion = 15.0.27924.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GRPCServer", "GRPCServer\GRPCServer.csproj", "{3166A410-3896-458D-885C-0DE8CD6158B5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A1A154A9-F1B4-451D-9247-A2F5E317267C}"
-	ProjectSection(SolutionItems) = preProject
-		GRPCProto\hellochat.proto = GRPCProto\hellochat.proto
-		GRPCProto\hellocounter.proto = GRPCProto\hellocounter.proto
-		GRPCProto\helloworld.proto = GRPCProto\helloworld.proto
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GRPCCounterClient", "GRPCCounterClient\GRPCCounterClient.csproj", "{1E0F1E8C-AB0E-45F6-B7DA-D258D2371336}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GRPCGreeterClient", "GRPCGreeterClient\GRPCGreeterClient.csproj", "{351CF4D2-DB14-457C-8207-0E66525CA6E4}"

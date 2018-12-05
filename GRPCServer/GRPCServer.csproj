@@ -12,7 +12,6 @@
     <!-- Uncomment line below to compile specific .proto files -->
     <!-- <ProtoBuf Include="..\GRPCProto\*.proto" GrpcServices="Server" /> -->
     <Compile Include="obj\**\*.cs" />
-
     <Compile Include="$(MSBuildThisFileDirectory)..\shared\*.cs"/>
 
     <PackageReference Include="Google.Protobuf" Version="3.6.1" />
