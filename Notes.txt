@@ -1,12 +1,13 @@
-1. Need to set <EnableDefaultProtoBufItems> property to auto compile .proto files
-2. Need to include references to Google.Protobuf and Grpc.Core packages
-3. Use pipes instead of streams
-4. Temporary files in obj/
-	TemporaryGeneratedFile_GUID.s
-5. Https
-6. Design time support
-7. Static BindService extensions
-8. Endpoint support
-9. Streaming client/server
-10. Logging
-11. Perf benchmarks
+Notes:
+
+1. Need to set <EnableDefaultProtoBufItems>true</EnableDefaultProtoBufItems>, this should be the default
+2. Missing namespaces and types, requires
+    <PackageReference Include="Google.Protobuf" Version="3.6.1" />
+    <PackageReference Include="Grpc.Core" Version="1.17.0-pre" />
+3. Use pipes
+4. Design time comparison with WebAPI
+5. Async/Sync naming
+6. Service reference
+7. Namespace of Outer type:
+    a. Common namespace
+    b. Base namespace of the project
