@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Grpc.Core;
@@ -38,11 +37,5 @@ namespace GRPCServer
                 await subscriber.WriteAsync(message);
             }
         }
-    }
-
-    public class MessageReceivedArgs : EventArgs
-    {
-        public ChatMessage ChatMessage { get; set; }
-        public IServerStreamWriter<ChatMessage> Writer { get; set; }
     }
 }
