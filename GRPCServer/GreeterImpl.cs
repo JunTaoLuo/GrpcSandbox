@@ -13,7 +13,7 @@ class GreeterImpl : Greeter.GreeterBase
         _logger = loggerFactory.CreateLogger<GreeterImpl>();
     }
 
-    // Server side handler of the SayHello RPC
+    //Server side handler of the SayHello RPC
     public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
     {
         _logger.LogInformation($"Sending hello to {request.Name}");
@@ -32,6 +32,6 @@ class GreeterImpl : Greeter.GreeterBase
         }
 
         _logger.LogInformation("Sending goodbye");
-        await responseStream.WriteAsync(new HelloReply { Message = $"Goodbye {request.Name}!"});
+        await responseStream.WriteAsync(new HelloReply { Message = $"Goodbye {request.Name}!" });
     }
 }
