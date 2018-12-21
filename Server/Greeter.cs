@@ -1,16 +1,16 @@
 
 using System.Threading.Tasks;
 using Grpc.Core;
-using HelloWorld;
+using Greet;
 using Microsoft.Extensions.Logging;
 
-class GreeterImpl : Greeter.GreeterBase
+class GreeterService : Greeter.GreeterBase
 {
     private ILogger _logger;
 
-    public GreeterImpl(ILoggerFactory loggerFactory)
+    public GreeterService(ILoggerFactory loggerFactory)
     {
-        _logger = loggerFactory.CreateLogger<GreeterImpl>();
+        _logger = loggerFactory.CreateLogger<GreeterService>();
     }
 
     //Server side handler of the SayHello RPC

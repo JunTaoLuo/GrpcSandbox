@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Common;
 using Grpc.Core;
-using HelloCounter;
+using Count;
 
 namespace GRPCClientSample
 {

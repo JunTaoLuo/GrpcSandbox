@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package HelloChat;
+package Chat;
 
 // The greeting service definition.
 service Chatter {

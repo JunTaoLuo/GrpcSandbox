@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/Empty.proto";
-package HelloCounter;
+package Count;
 
 // The counter service definition.
 service Counter {

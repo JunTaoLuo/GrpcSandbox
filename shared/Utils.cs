@@ -6,7 +6,7 @@ namespace Common
 {
     public static class Utils
     {
-        public static string CertDir = Path.Combine(GetSolutionDirectory(), "certs");
+        public static string CertDir = Path.Combine(GetSolutionDirectory(), "Certs");
         public static string ServerPFXPath = Path.Combine(CertDir, "server.pfx");
         public static SslCredentials ClientSslCredentials
             = new SslCredentials(
@@ -22,7 +22,7 @@ namespace Common
             var directoryInfo = new DirectoryInfo(applicationBasePath);
             do
             {
-                var solutionFileInfo = new FileInfo(Path.Combine(directoryInfo.FullName, "GRPCSample.sln"));
+                var solutionFileInfo = new FileInfo(Path.Combine(directoryInfo.FullName, "Sample.sln"));
                 if (solutionFileInfo.Exists)
                 {
                     return directoryInfo.FullName;

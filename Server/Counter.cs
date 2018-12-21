@@ -2,20 +2,20 @@
 using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using HelloCounter;
+using Count;
 using Microsoft.Extensions.Logging;
 
 namespace GRPCServer
 {
-    public class CounterImpl : Counter.CounterBase
+    public class CounterService : Counter.CounterBase
     {
         private ILogger _logger;
         private IncrementingCounter _counter;
 
-        public CounterImpl(IncrementingCounter counter, ILoggerFactory loggerFactory)
+        public CounterService(IncrementingCounter counter, ILoggerFactory loggerFactory)
         {
             _counter = counter;
-            _logger = loggerFactory.CreateLogger<CounterImpl>();
+            _logger = loggerFactory.CreateLogger<CounterService>();
         }
 
         public override Task<CounterReply> IncrementCount(Empty request, ServerCallContext context)

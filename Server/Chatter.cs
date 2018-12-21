@@ -2,18 +2,18 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Grpc.Core;
-using HelloChat;
+using Chat;
 using Microsoft.Extensions.Logging;
 
 namespace GRPCServer
 {
-    public class ChatterImpl : Chatter.ChatterBase
+    public class ChatterService : Chatter.ChatterBase
     {
         private ILogger _logger;
 
-        public ChatterImpl(ILoggerFactory loggerFactory)
+        public ChatterService(ILoggerFactory loggerFactory)
         {
-            _logger = loggerFactory.CreateLogger<ChatterImpl>();
+            _logger = loggerFactory.CreateLogger<ChatterService>();
         }
 
         private static HashSet<IServerStreamWriter<ChatMessage>> _subscribers = new HashSet<IServerStreamWriter<ChatMessage>>();

@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common;
 using Grpc.Core;
-using HelloChat;
+using Chat;
 
 namespace GRPCChatterClient
 {

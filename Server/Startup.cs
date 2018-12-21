@@ -1,7 +1,6 @@
 ﻿using GRPCServer.Dotnet;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GRPCServer
@@ -21,9 +20,9 @@ namespace GRPCServer
         {
             app.UseRouting(builder =>
             {
-                builder.MapGrpcService<ChatterImpl>();
-                builder.MapGrpcService<CounterImpl>();
-                builder.MapGrpcService<GreeterImpl>();
+                builder.MapGrpcService<ChatterService>();
+                builder.MapGrpcService<CounterService>();
+                builder.MapGrpcService<GreeterService>();
             });
         }
     }
