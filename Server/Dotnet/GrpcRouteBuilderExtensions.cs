@@ -15,8 +15,6 @@ namespace GRPCServer.Dotnet
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            //var serviceBinder = new GrpcServiceBinder<TImplementation>(builder);
-
             // Get implementation type
             var implementationType = typeof(TImplementation);
 
