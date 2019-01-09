@@ -18,7 +18,7 @@
     <None Remove="@(ProtoBuf)" />
     <Content Include="@(ProtoBuf)" LinkBase="" />
 
-    <Compile Include="$(MSBuildThisFileDirectory)..\Shared\*.cs"/>
+    <Compile Include="$(MSBuildThisFileDirectory)..\Shared\*.cs" />
 
     <PackageReference Include="Microsoft.AspNetCore.App" Version="3.0.0-preview-18607-0108" />
     <PackageReference Include="Google.Protobuf" Version="3.6.1" />

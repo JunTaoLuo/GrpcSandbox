@@ -1,5 +1,7 @@
 ﻿using System;
-using Grpc.Core;
+using Google.Protobuf.Reflection;
+using GRPCServer.Internal;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
 namespace GRPCServer.Dotnet
@@ -13,7 +15,7 @@ namespace GRPCServer.Dotnet
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            var serviceBinder = new GrpcServiceBinder<TImplementation>(builder);
+            //var serviceBinder = new GrpcServiceBinder<TImplementation>(builder);
 
             // Get implementation type
             var implementationType = typeof(TImplementation);
@@ -28,12 +30,28 @@ namespace GRPCServer.Dotnet
             // We need to call Foo.BindService from the declaring type.
             var declaringType = baseType.DeclaringType;
 
-            // The method we want to call is public static void BindService(ServiceBinderBase serviceBinder, CounterBase serviceImpl)
-            var bindService = declaringType.GetMethod("BindService", new[] { typeof(ServiceBinderBase), baseType });
+            // Get the descriptor
+            var descriptor = declaringType.GetProperty("Descriptor").GetValue(declaringType) as ServiceDescriptor ?? throw new InvalidOperationException("Cannot retrive service descriptor");
 
-            // Invoke
-            // Note that the service binder API right now requires a non-null instance. Hopefully we can change it so we don't have to create an arbitrary instance here.
-            bindService.Invoke(null, new object[] { serviceBinder, new DefaultGrpcServiceActivator<TImplementation>(builder.ServiceProvider).Create() });
+            foreach (var method in descriptor.Methods)
+            {
+                if (method.IsClientStreaming && method.IsServerStreaming)
+                {
+                    builder.MapPost($"{method.Service.FullName}/{method.Name}", new DuplexStreamingServerCallHandler<TImplementation>(method.InputType, method.OutputType, method.Name).HandleCallAsync);
+                }
+                else if (method.IsClientStreaming)
+                {
+                    builder.MapPost($"{method.Service.FullName}/{method.Name}", new ClientStreamingServerCallHandler<TImplementation>(method.InputType, method.Name).HandleCallAsync);
+                }
+                else if (method.IsServerStreaming)
+                {
+                    builder.MapPost($"{method.Service.FullName}/{method.Name}", new ServerStreamingServerCallHandler<TImplementation>(method.InputType, method.OutputType, method.Name).HandleCallAsync);
+                }
+                else
+                {
+                    builder.MapPost($"{method.Service.FullName}/{method.Name}", new UnaryServerCallHandler<TImplementation>(method.InputType, method.Name).HandleCallAsync);
+                }
+            }
 
             return builder;
         }
