@@ -50,8 +50,9 @@ namespace GRPCServer.Internal
             var handlerMethod = typeof(TImplementation).GetMethod(_methodName);
 
             // Invoke procedure
-            // TODO: make sure the response is not null
             var response = await (Task<TResponse>)handlerMethod.Invoke(service, new object[] { request, null });
+
+            // TODO: make sure the response is not null
             var responsePayload = response.ToByteArray();
 
             await StreamUtils.WriteMessageAsync(httpContext.Response.Body, responsePayload, 0, responsePayload.Length);
@@ -93,7 +94,14 @@ namespace GRPCServer.Internal
             var handlerMethod = typeof(TImplementation).GetMethod(_methodName);
 
             // Invoke procedure
-            await (Task)handlerMethod.Invoke(service, new object[] { request, new HttpContextStreamWriter<TResponse>(httpContext, response => response.ToByteArray()) , null });
+            await (Task)handlerMethod.Invoke(
+                service,
+                new object[]
+                {
+                    request,
+                    new HttpContextStreamWriter<TResponse>(httpContext, response => response.ToByteArray()),
+                    null
+                });
 
             httpContext.Response.AppendTrailer("grpc-status", ((int)StatusCode.OK).ToString());
         }
@@ -126,10 +134,17 @@ namespace GRPCServer.Internal
             var handlerMethod = typeof(TImplementation).GetMethod(_methodName);
 
             // Invoke procedure
-            var response = await (Task<TResponse>)handlerMethod.Invoke(service, new object[] { new HttpContextStreamReader<TRequest>(httpContext, _inputParser.ParseFrom), null });
-            var responsePayload = response.ToByteArray();
+            var response = await (Task<TResponse>)handlerMethod.Invoke(
+                service,
+                new object[]
+                {
+                    new HttpContextStreamReader<TRequest>(httpContext, bytes => (TRequest)_inputParser.ParseFrom(bytes)),
+                    null
+                });
 
             // TODO: make sure the response is not null
+            var responsePayload = response.ToByteArray();
+
             await StreamUtils.WriteMessageAsync(httpContext.Response.Body, responsePayload, 0, responsePayload.Length);
 
             httpContext.Response.AppendTrailer("grpc-status", ((int)StatusCode.OK).ToString());
@@ -163,7 +178,13 @@ namespace GRPCServer.Internal
             var handlerMethod = typeof(TImplementation).GetMethod(_methodName);
 
             // Invoke procedure
-            await (Task)handlerMethod.Invoke(service, new object[] { new HttpContextStreamReader<TRequest>(httpContext, _inputParser.ParseFrom), new HttpContextStreamWriter<TResponse>(httpContext, response => response.ToByteArray()), null });
+            await (Task)handlerMethod.Invoke(
+                service,
+                new object[] {
+                    new HttpContextStreamReader<TRequest>(httpContext, bytes => (TRequest)_inputParser.ParseFrom(bytes)),
+                    new HttpContextStreamWriter<TResponse>(httpContext, response => response.ToByteArray()),
+                    null
+                });
 
             httpContext.Response.AppendTrailer("grpc-status", ((int)StatusCode.OK).ToString());
         }
@@ -172,9 +193,9 @@ namespace GRPCServer.Internal
     internal class HttpContextStreamReader<TRequest> : IAsyncStreamReader<TRequest>
     {
         private HttpContext _httpContext;
-        private Func<byte[], IMessage> _deserializer;
+        private Func<byte[], TRequest> _deserializer;
 
-        public HttpContextStreamReader(HttpContext context, Func<byte[], IMessage> deserializer)
+        public HttpContextStreamReader(HttpContext context, Func<byte[], TRequest> deserializer)
         {
             _httpContext = context;
             _deserializer = deserializer;
@@ -196,7 +217,7 @@ namespace GRPCServer.Internal
                 return false;
             }
 
-            Current = (TRequest)_deserializer(requestPayload);
+            Current = _deserializer(requestPayload);
             return true;
         }
     }
@@ -204,9 +225,9 @@ namespace GRPCServer.Internal
     internal class HttpContextStreamWriter<TResponse> : IServerStreamWriter<TResponse>
     {
         HttpContext _httpContext;
-        Func<IMessage, byte[]> _serializer;
+        Func<TResponse, byte[]> _serializer;
 
-        public HttpContextStreamWriter(HttpContext context, Func<IMessage, byte[]> serializer)
+        public HttpContextStreamWriter(HttpContext context, Func<TResponse, byte[]> serializer)
         {
             _httpContext = context;
             _serializer = serializer;
@@ -217,7 +238,7 @@ namespace GRPCServer.Internal
         public Task WriteAsync(TResponse message)
         {
             // TODO: make sure the response is not null
-            var responsePayload = _serializer((IMessage)message);
+            var responsePayload = _serializer(message);
             return StreamUtils.WriteMessageAsync(_httpContext.Response.Body, responsePayload, 0, responsePayload.Length);
         }
     }
