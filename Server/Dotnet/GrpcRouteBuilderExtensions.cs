@@ -29,7 +29,7 @@ namespace GRPCServer.Dotnet
             var declaringType = baseType.DeclaringType;
 
             // Get the descriptor
-            var descriptor = declaringType.GetProperty("Descriptor").GetValue(declaringType) as ServiceDescriptor ?? throw new InvalidOperationException("Cannot retrive service descriptor");
+            var descriptor = declaringType.GetProperty("Descriptor").GetValue(null) as ServiceDescriptor ?? throw new InvalidOperationException("Cannot retrive service descriptor");
 
             foreach (var method in descriptor.Methods)
             {
