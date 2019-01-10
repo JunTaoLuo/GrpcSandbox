@@ -33,22 +33,32 @@ namespace GRPCServer.Dotnet
 
             foreach (var method in descriptor.Methods)
             {
+                var inputType = method.InputType;
+                var outputType = method.OutputType;
+                object handler;
+
                 if (method.IsClientStreaming && method.IsServerStreaming)
                 {
-                    builder.MapPost($"{method.Service.FullName}/{method.Name}", new DuplexStreamingServerCallHandler<TImplementation>(method.InputType, method.OutputType, method.Name).HandleCallAsync);
+                    var handlerType = typeof(DuplexStreamingServerCallHandler<,,>).MakeGenericType(inputType.ClrType, outputType.ClrType, implementationType);
+                    handler = Activator.CreateInstance(handlerType, new object[] { inputType.Parser, method.Name });
                 }
                 else if (method.IsClientStreaming)
                 {
-                    builder.MapPost($"{method.Service.FullName}/{method.Name}", new ClientStreamingServerCallHandler<TImplementation>(method.InputType, method.Name).HandleCallAsync);
+                    var handlerType = typeof(ClientStreamingServerCallHandler<,,>).MakeGenericType(inputType.ClrType, outputType.ClrType, implementationType);
+                    handler = Activator.CreateInstance(handlerType, new object[] { inputType.Parser, method.Name });
                 }
                 else if (method.IsServerStreaming)
                 {
-                    builder.MapPost($"{method.Service.FullName}/{method.Name}", new ServerStreamingServerCallHandler<TImplementation>(method.InputType, method.OutputType, method.Name).HandleCallAsync);
+                    var handlerType = typeof(ServerStreamingServerCallHandler<,,>).MakeGenericType(inputType.ClrType, outputType.ClrType, implementationType);
+                    handler = Activator.CreateInstance(handlerType, new object[] { inputType.Parser, method.Name });
                 }
                 else
                 {
-                    builder.MapPost($"{method.Service.FullName}/{method.Name}", new UnaryServerCallHandler<TImplementation>(method.InputType, method.Name).HandleCallAsync);
+                    var handlerType = typeof(UnaryServerCallHandler<,,>).MakeGenericType(inputType.ClrType, outputType.ClrType, implementationType);
+                    handler = Activator.CreateInstance(handlerType, new object[] { inputType.Parser, method.Name }) ;
                 }
+
+                builder.MapPost($"{method.Service.FullName}/{method.Name}", ((IServerCallHandler)handler).HandleCallAsync);
             }
 
             return builder;
