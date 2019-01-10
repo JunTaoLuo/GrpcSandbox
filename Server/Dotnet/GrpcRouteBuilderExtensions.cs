@@ -1,5 +1,7 @@
 ﻿using System;
-using Grpc.Core;
+using Google.Protobuf.Reflection;
+using GRPCServer.Internal;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
 namespace GRPCServer.Dotnet
@@ -12,8 +14,6 @@ namespace GRPCServer.Dotnet
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-
-            var serviceBinder = new GrpcServiceBinder<TImplementation>(builder);
 
             // Get implementation type
             var implementationType = typeof(TImplementation);
@@ -28,12 +28,38 @@ namespace GRPCServer.Dotnet
             // We need to call Foo.BindService from the declaring type.
             var declaringType = baseType.DeclaringType;
 
-            // The method we want to call is public static void BindService(ServiceBinderBase serviceBinder, CounterBase serviceImpl)
-            var bindService = declaringType.GetMethod("BindService", new[] { typeof(ServiceBinderBase), baseType });
+            // Get the descriptor
+            var descriptor = declaringType.GetProperty("Descriptor").GetValue(null) as ServiceDescriptor ?? throw new InvalidOperationException("Cannot retrive service descriptor");
 
-            // Invoke
-            // Note that the service binder API right now requires a non-null instance. Hopefully we can change it so we don't have to create an arbitrary instance here.
-            bindService.Invoke(null, new object[] { serviceBinder, new DefaultGrpcServiceActivator<TImplementation>(builder.ServiceProvider).Create() });
+            foreach (var method in descriptor.Methods)
+            {
+                var inputType = method.InputType;
+                var outputType = method.OutputType;
+                object handler;
+
+                if (method.IsClientStreaming && method.IsServerStreaming)
+                {
+                    var handlerType = typeof(DuplexStreamingServerCallHandler<,,>).MakeGenericType(inputType.ClrType, outputType.ClrType, implementationType);
+                    handler = Activator.CreateInstance(handlerType, new object[] { inputType.Parser, method.Name });
+                }
+                else if (method.IsClientStreaming)
+                {
+                    var handlerType = typeof(ClientStreamingServerCallHandler<,,>).MakeGenericType(inputType.ClrType, outputType.ClrType, implementationType);
+                    handler = Activator.CreateInstance(handlerType, new object[] { inputType.Parser, method.Name });
+                }
+                else if (method.IsServerStreaming)
+                {
+                    var handlerType = typeof(ServerStreamingServerCallHandler<,,>).MakeGenericType(inputType.ClrType, outputType.ClrType, implementationType);
+                    handler = Activator.CreateInstance(handlerType, new object[] { inputType.Parser, method.Name });
+                }
+                else
+                {
+                    var handlerType = typeof(UnaryServerCallHandler<,,>).MakeGenericType(inputType.ClrType, outputType.ClrType, implementationType);
+                    handler = Activator.CreateInstance(handlerType, new object[] { inputType.Parser, method.Name }) ;
+                }
+
+                builder.MapPost($"{method.Service.FullName}/{method.Name}", ((IServerCallHandler)handler).HandleCallAsync);
+            }
 
             return builder;
         }

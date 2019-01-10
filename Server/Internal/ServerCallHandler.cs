@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Google.Protobuf;
+using Google.Protobuf.Reflection;
 using Grpc.Core;
 using GRPCServer.Dotnet;
 using Microsoft.AspNetCore.Http;
@@ -15,15 +17,18 @@ namespace GRPCServer.Internal
         Task HandleCallAsync(HttpContext httpContext);
     }
 
-    internal class UnaryServerCallHandler<TRequest, TResponse, TImplementation> : IServerCallHandler where TImplementation : class
-        where TRequest : class
-        where TResponse : class
+    internal class UnaryServerCallHandler<TRequest, TResponse, TImplementation> : IServerCallHandler
+        where TRequest : IMessage
+        where TResponse : IMessage
+        where TImplementation : class
     {
-        readonly Method<TRequest, TResponse> method;
+        private string _methodName;
+        private MessageParser _inputParser;
 
-        public UnaryServerCallHandler(Method<TRequest, TResponse> method)
+        public UnaryServerCallHandler(MessageParser inputParser, string methodName)
         {
-            this.method = method;
+            _methodName = methodName;
+            _inputParser = inputParser;
         }
 
         public async Task HandleCallAsync(HttpContext httpContext)
@@ -33,7 +38,7 @@ namespace GRPCServer.Internal
 
             var requestPayload = await StreamUtils.ReadMessageAsync(httpContext.Request.Body);
             // TODO: make sure the payload is not null
-            var request = method.RequestMarshaller.Deserializer(requestPayload);
+            var request = (TRequest)_inputParser.ParseFrom(requestPayload);
 
             // TODO: make sure there are no more request messages.
 
@@ -42,13 +47,13 @@ namespace GRPCServer.Internal
             var service = activator.Create();
 
             // Select procedure using reflection
-            var handlerMethod = typeof(TImplementation).GetMethod(method.Name);
+            var handlerMethod = typeof(TImplementation).GetMethod(_methodName);
 
             // Invoke procedure
             var response = await (Task<TResponse>)handlerMethod.Invoke(service, new object[] { request, null });
 
             // TODO: make sure the response is not null
-            var responsePayload = method.ResponseMarshaller.Serializer(response);
+            var responsePayload = response.ToByteArray();
 
             await StreamUtils.WriteMessageAsync(httpContext.Response.Body, responsePayload, 0, responsePayload.Length);
 
@@ -56,15 +61,18 @@ namespace GRPCServer.Internal
         }
     }
 
-    internal class ServerStreamingServerCallHandler<TRequest, TResponse, TImplementation> : IServerCallHandler where TImplementation : class
-        where TRequest : class
-        where TResponse : class
+    internal class ServerStreamingServerCallHandler<TRequest, TResponse, TImplementation> : IServerCallHandler
+        where TRequest : IMessage
+        where TResponse : IMessage
+        where TImplementation : class
     {
-        readonly Method<TRequest, TResponse> method;
+        private string _methodName;
+        private MessageParser _inputParser;
 
-        public ServerStreamingServerCallHandler(Method<TRequest, TResponse> method)
+        public ServerStreamingServerCallHandler(MessageParser inputParser, string methodName)
         {
-            this.method = method;
+            _methodName = methodName;
+            _inputParser = inputParser;
         }
 
         public async Task HandleCallAsync(HttpContext httpContext)
@@ -74,7 +82,7 @@ namespace GRPCServer.Internal
 
             var requestPayload = await StreamUtils.ReadMessageAsync(httpContext.Request.Body);
             // TODO: make sure the payload is not null
-            var request = method.RequestMarshaller.Deserializer(requestPayload);
+            var request = (TRequest)_inputParser.ParseFrom(requestPayload);
 
             // TODO: make sure there are no more request messages.
 
@@ -83,24 +91,34 @@ namespace GRPCServer.Internal
             var service = activator.Create();
 
             // Select procedure using reflection
-            var handlerMethod = typeof(TImplementation).GetMethod(method.Name);
+            var handlerMethod = typeof(TImplementation).GetMethod(_methodName);
 
             // Invoke procedure
-            await (Task)handlerMethod.Invoke(service, new object[] { request, new HttpContextStreamWriter<TResponse>(httpContext, method.ResponseMarshaller.Serializer), null });
+            await (Task)handlerMethod.Invoke(
+                service,
+                new object[]
+                {
+                    request,
+                    new HttpContextStreamWriter<TResponse>(httpContext, response => response.ToByteArray()),
+                    null
+                });
 
             httpContext.Response.AppendTrailer("grpc-status", ((int)StatusCode.OK).ToString());
         }
     }
 
-    internal class ClientStreamingServerCallHandler<TRequest, TResponse, TImplementation> : IServerCallHandler where TImplementation : class
-        where TRequest : class
-        where TResponse : class
+    internal class ClientStreamingServerCallHandler<TRequest, TResponse, TImplementation> : IServerCallHandler
+        where TRequest : IMessage
+        where TResponse : IMessage
+        where TImplementation : class
     {
-        readonly Method<TRequest, TResponse> method;
+        private MessageParser _inputParser;
+        private string _methodName;
 
-        public ClientStreamingServerCallHandler(Method<TRequest, TResponse> method)
+        public ClientStreamingServerCallHandler(MessageParser inputParser, string methodName)
         {
-            this.method = method;
+            _methodName = methodName;
+            _inputParser = inputParser;
         }
 
         public async Task HandleCallAsync(HttpContext httpContext)
@@ -113,13 +131,19 @@ namespace GRPCServer.Internal
             var service = activator.Create();
 
             // Select procedure using reflection
-            var handlerMethod = typeof(TImplementation).GetMethod(method.Name);
+            var handlerMethod = typeof(TImplementation).GetMethod(_methodName);
 
             // Invoke procedure
-            var response = await (Task<TResponse>)handlerMethod.Invoke(service, new object[] { new HttpContextStreamReader<TRequest>(httpContext, method.RequestMarshaller.Deserializer), null });
+            var response = await (Task<TResponse>)handlerMethod.Invoke(
+                service,
+                new object[]
+                {
+                    new HttpContextStreamReader<TRequest>(httpContext, bytes => (TRequest)_inputParser.ParseFrom(bytes)),
+                    null
+                });
 
             // TODO: make sure the response is not null
-            var responsePayload = method.ResponseMarshaller.Serializer(response);
+            var responsePayload = response.ToByteArray();
 
             await StreamUtils.WriteMessageAsync(httpContext.Response.Body, responsePayload, 0, responsePayload.Length);
 
@@ -127,15 +151,18 @@ namespace GRPCServer.Internal
         }
     }
 
-    internal class DuplexStreamingServerCallHandler<TRequest, TResponse, TImplementation> : IServerCallHandler where TImplementation : class
-        where TRequest : class
-        where TResponse : class
+    internal class DuplexStreamingServerCallHandler<TRequest, TResponse, TImplementation> : IServerCallHandler
+        where TRequest : IMessage
+        where TResponse : IMessage
+        where TImplementation : class
     {
-        readonly Method<TRequest, TResponse> method;
+        private MessageParser _inputParser;
+        private string _methodName;
 
-        public DuplexStreamingServerCallHandler(Method<TRequest, TResponse> method)
+        public DuplexStreamingServerCallHandler(MessageParser inputParser, string methodName)
         {
-            this.method = method;
+            _methodName = methodName;
+            _inputParser = inputParser;
         }
 
         public async Task HandleCallAsync(HttpContext httpContext)
@@ -148,10 +175,16 @@ namespace GRPCServer.Internal
             var service = activator.Create();
 
             // Select procedure using reflection
-            var handlerMethod = typeof(TImplementation).GetMethod(method.Name);
+            var handlerMethod = typeof(TImplementation).GetMethod(_methodName);
 
             // Invoke procedure
-            await (Task)handlerMethod.Invoke(service, new object[] { new HttpContextStreamReader<TRequest>(httpContext, method.RequestMarshaller.Deserializer), new HttpContextStreamWriter<TResponse>(httpContext, method.ResponseMarshaller.Serializer), null });
+            await (Task)handlerMethod.Invoke(
+                service,
+                new object[] {
+                    new HttpContextStreamReader<TRequest>(httpContext, bytes => (TRequest)_inputParser.ParseFrom(bytes)),
+                    new HttpContextStreamWriter<TResponse>(httpContext, response => response.ToByteArray()),
+                    null
+                });
 
             httpContext.Response.AppendTrailer("grpc-status", ((int)StatusCode.OK).ToString());
         }
